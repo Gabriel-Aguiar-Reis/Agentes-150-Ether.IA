@@ -1,0 +1,23 @@
+projeto_agentes_langchain/
+│
+├── main.py                # Streamlit - interface
+├── requirements.txt       # Dependências
+│
+├── agents/
+│   ├── __init__.py
+│   ├── reader_agent.py    # Lê e processa arquivos
+│   ├── formatter_agent.py # Formata dados
+│   ├── db_agent.py        # Insere no banco
+│   ├── query_agent.py     # Responde perguntas
+│   └── workflow.py        # Orquestração usando LangChain
+│
+├── services/
+│   ├── __init__.py
+│   ├── file_service.py    # Salva e detecta tipo
+│   ├── db_service.py      # Conexão SQLite
+│
+├── data/
+│   └── (arquivos e banco SQLite)
+└── models/
+    └── prompt_templates.py # Templates de prompt
+
