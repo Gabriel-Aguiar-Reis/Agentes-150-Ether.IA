@@ -6,3 +6,6 @@ sqlite-utils==3.35
 python-dotenv==1.0.0
 langchain==0.3.0
 langgraph==0.2.20
+pymongo==4.5.0
+pathlib2==2.3.7
+typing-extensions==4.8.0
