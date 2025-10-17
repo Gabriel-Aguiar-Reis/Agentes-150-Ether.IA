@@ -19,11 +19,16 @@ import json
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
 
-# Carregar as credenciais do secrets.toml
-firebase_credentials = st.secrets["firebase"]["credentials_json"]
+# Carregar as credenciais do secrets.toml ou variáveis de ambiente 
+def get_firebase_credentials():
+    # Tenta pegar das variáveis de ambiente
+    if os.getenv("FIREBASE_CREDENTIALS_JSON"):
+        return json.loads(os.getenv("FIREBASE_CREDENTIALS_JSON"))
+    # Se não existir, pega do secrets.toml (local)
+    return json.loads(st.secrets["firebase"]["credentials_json"])
 
 # Converter a string JSON em dicionário
-cred_dict = json.loads(firebase_credentials)
+cred_dict = get_firebase_credentials()
 
 if not groq_api_key:
     st.error("Por favor, configure sua GROQ_API_kEY no .env ou no Streamlit secrets.")
