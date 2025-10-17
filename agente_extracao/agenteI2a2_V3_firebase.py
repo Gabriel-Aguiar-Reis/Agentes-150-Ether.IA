@@ -11,12 +11,19 @@ from PyPDF2 import PdfReader
 from pdf2image import convert_from_path
 import pytesseract
 from langchain_core.messages import HumanMessage
+import json
 
 # =========================
 # CONFIGURAÇÃO DO AMBIENTE
 # =========================
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY")
+
+# Carregar as credenciais do secrets.toml
+firebase_credentials = st.secrets["firebase"]["credentials_json"]
+
+# Converter a string JSON em dicionário
+cred_dict = json.loads(firebase_credentials)
 
 if not groq_api_key:
     st.error("Por favor, configure sua GROQ_API_kEY no .env ou no Streamlit secrets.")
@@ -30,8 +37,7 @@ llm = ChatGroq(
 
 # Inicialize o Firebase
 if not firebase_admin._apps:
-     # Substitua pelo caminho do seu arquivo de credenciais do Firebase
-    cred = credentials.Certificate("CAMINHO_DO_ARQUIVO_DE_CONEXAO_COM_FIRE_BASE.json")
+    cred = credentials.Certificate(cred_dict)
     firebase_admin.initialize_app(cred)
 db_firestore = firestore.client()
 
@@ -75,22 +81,50 @@ def processar_pdf_imagem(file_path):
 # =========================
 def detectar_tipo_arquivo(file_path):
     tipo, _ = mimetypes.guess_type(file_path)
-    if tipo == "text/csv":
+    print(f"Tipo detectado: {tipo}")
+
+    ext = os.path.splitext(file_path)[1].lower()
+
+    # --- 1️⃣ CSV Detection ---
+    if tipo == "text/csv" or ext == ".csv":
         return "CSV"
-    elif tipo == "application/xml" or file_path.lower().endswith(".xml"):
+
+    # Excel salvando como "application/vnd.ms-excel"
+    if tipo == "application/vnd.ms-excel" and ext == ".csv":
+        # Verifica se o conteúdo é texto legível
+        try:
+            with open(file_path, encoding="utf-8") as f:
+                sample = f.read(1024)
+                # Se contiver vírgulas ou ponto e vírgula, provavelmente é CSV
+                if "," in sample or ";" in sample:
+                    return "CSV"
+        except Exception as e:
+            print("Erro ao verificar CSV:", e)
+        return "DESCONHECIDO"
+
+    # --- 2️⃣ XML ---
+    if tipo == "application/xml" or ext == ".xml":
         return "XML"
-    elif tipo == "application/pdf":
-        # Detecta se é PDF texto ou imagem
+
+    # --- 3️⃣ PDF Detection ---
+    if tipo == "application/pdf" or ext == ".pdf":
         try:
             reader = PdfReader(file_path)
             if any(page.extract_text() for page in reader.pages):
                 return "PDF_TEXTO"
             else:
                 return "PDF_IMAGEM"
-        except:
+        except Exception:
             return "PDF_IMAGEM"
-    else:
-        return "DESCONHECIDO"
+
+    # --- 4️⃣ Planilhas Excel modernas ---
+    if tipo in ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] or ext == ".xlsx":
+        return "EXCEL_XLSX"
+    if tipo in ["application/vnd.ms-excel"] and ext == ".xls":
+        return "EXCEL_XLS"
+
+    # --- 5️⃣ Desconhecido ---
+    return "DESCONHECIDO"
 
 # =========================
 # INTERFACE STREAMLIT
