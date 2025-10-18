@@ -184,3 +184,4 @@ class LoggingService:
 
 # Instância global do serviço de logging
 logging_service = LoggingService()
+

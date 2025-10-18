@@ -21,7 +21,8 @@ Sistema avançado de processamento de arquivos com suporte a múltiplos formatos
 - Logs separados para diferentes operações
 
 ### 4. **Configuração Flexível de LLM**
-- Suporte a múltiplos provedores (OpenAI, Anthropic, Google)
+- Suporte a múltiplos provedores (OpenRouter, OpenAI, Anthropic, Google)
+- **OpenRouter**: Acesso a 100+ modelos de diferentes provedores
 - Configuração segura de API keys
 - Interface intuitiva para troca de LLM
 - Teste de conexão integrado
@@ -100,8 +101,12 @@ logs/
 - **🤖 LLM Atual**: Mostra configuração atual
 
 ### Configuração de LLM:
-- **Provedores Suportados**: OpenAI, Anthropic, Google
-- **Modelos Disponíveis**: GPT-3.5/4, Claude, Gemini
+- **Provedores Suportados**: OpenRouter, OpenAI, Anthropic, Google
+- **Modelos Disponíveis**: 
+  - **OpenRouter**: 100+ modelos (GPT-4, Claude, Gemini, Llama, Mistral, etc.)
+  - **OpenAI**: GPT-3.5/4, GPT-4 Turbo
+  - **Anthropic**: Claude-3 Sonnet/Opus/Haiku
+  - **Google**: Gemini Pro, Gemini Pro Vision
 - **Segurança**: API keys armazenadas em sessão
 - **Teste**: Validação de conexão integrada
 

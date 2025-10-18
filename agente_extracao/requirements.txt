@@ -1,13 +1,20 @@
+# Core application dependencies
 streamlit>=1.28.0
+python-dotenv>=1.0.0
+
+# Data processing
+pandas>=2.0.0
+openpyxl>=3.1.0
+xlsxwriter>=3.1.0
+pypdf>=3.0.0
+
+# LangChain ecosystem (simplified)
 langchain>=0.1.0
 langchain-experimental>=0.0.50
 langchain-community>=0.0.20
-langchain-anthropic>=0.1.0
-langchain-google-genai>=1.0.0
+
+# LLM provider (only OpenRouter via OpenAI-compatible API)
 openai>=1.0.0
-pandas>=2.0.0
-pypdf>=3.0.0
-python-dotenv>=1.0.0
+
+# Development and testing
 pytest>=7.0.0
-openpyxl>=3.1.0
-xlsxwriter>=3.1.0

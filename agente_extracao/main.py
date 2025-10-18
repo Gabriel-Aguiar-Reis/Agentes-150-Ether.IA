@@ -40,12 +40,32 @@ def main():
     with st.sidebar:
         st.header("⚙️ Configurações")
         
-        # Botão para configurar LLM
-        if st.button("🔧 Configurar LLM", type="primary"):
-            st.session_state.show_llm_config = True
+        # Verifica se OpenRouter está configurado
+        config = config_service.get_current_config()
         
-        # Mostra LLM atual
-        st.info(config_service.get_current_llm_info())
+        if not config['configured']:
+            st.warning("⚠️ OpenRouter não configurado")
+            st.markdown("**Configure sua API key:**")
+            
+            # Campo para API key se não estiver no ambiente
+            api_key = st.text_input(
+                "OpenRouter API Key:",
+                type="password",
+                help="Insira sua OpenRouter API Key"
+            )
+            
+            if api_key:
+                if st.button("💾 Salvar API Key", type="primary"):
+                    if config_service.save_config(config['model'], api_key):
+                        st.success("✅ API Key salva!")
+                        st.rerun()
+        else:
+            # Mostra LLM atual
+            st.info(config_service.get_current_llm_info())
+            
+            # Botão para reconfigurar
+            if st.button("🔧 Reconfigurar", type="secondary"):
+                st.session_state.show_llm_config = True
         
         st.markdown("---")
         st.header("📊 Estatísticas")
@@ -85,7 +105,6 @@ def main():
         )
         
         if upload_option == "📄 Arquivo Único":
-
             uploaded_file = st.file_uploader(
                 "Selecione um arquivo",
                 type=["pdf", "xml", "csv", "xls", "xlsx"],
@@ -94,15 +113,15 @@ def main():
             
             if uploaded_file:
                 file_path = save_uploaded_file(uploaded_file, "data")
-                        
+                
                 # Usa detecção melhorada de tipo
                 file_type = get_supported_file_type(file_path)
                 detected_type = detectar_tipo_arquivo(file_path)
-                        
+                
                 if not file_type:
                     st.error(f"❌ Tipo de arquivo não suportado! Detectado: {detected_type}")
                     return
-                        
+                
                 # Mostra informações do arquivo
                 col1, col2, col3 = st.columns(3)
                 with col1:
@@ -113,11 +132,9 @@ def main():
                     st.metric("Tamanho", f"{uploaded_file.size / 1024:.1f} KB")
                 
                 if st.button("🚀 Processar Arquivo", type="primary"):
-
                     with st.spinner(f"Processando {uploaded_file.name}..."):
-                        
                         result = process_file(file_path, file_type)
-                                
+                        
                         if result["status"] == "success":
                             st.success(f"✅ {result['file']} processado com sucesso!")
                             
@@ -132,7 +149,6 @@ def main():
                             st.error(f"❌ Erro ao processar {result['file']}: {result['error']}")
         
         elif upload_option == "📦 Arquivo ZIP":
-
             uploaded_zip = st.file_uploader(
                 "Selecione um arquivo ZIP",
                 type=["zip"],
