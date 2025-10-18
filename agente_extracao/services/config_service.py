@@ -8,12 +8,6 @@ class ConfigService:
     
     def __init__(self):
         self.llm_providers = {
-            "OpenAI": {
-                "name": "OpenAI",
-                "api_key_env": "OPENAI_API_KEY",
-                "models": ["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo-preview"],
-                "default_model": "gpt-3.5-turbo"
-            },
             "Anthropic": {
                 "name": "Anthropic",
                 "api_key_env": "ANTHROPIC_API_KEY", 
@@ -23,8 +17,14 @@ class ConfigService:
             "Google": {
                 "name": "Google",
                 "api_key_env": "GOOGLE_API_KEY",
-                "models": ["gemini-pro", "gemini-pro-vision"],
-                "default_model": "gemini-pro"
+                "models": ["gemini-2.5-pro", "gemini-2.5-flash"],
+                "default_model": "gemini-2.5-pro"
+            },
+            "OpenAI": {
+                "name": "OpenAI",
+                "api_key_env": "OPENAI_API_KEY",
+                "models": ["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo-preview"],
+                "default_model": "gpt-3.5-turbo"
             }
         }
     
@@ -103,7 +103,8 @@ class ConfigService:
             )
             
             # Seleção do modelo baseado no provedor
-            provider_info = self.llm_providers[provider]
+            provider_info = self.llm_providers[provider]            
+
             model = st.selectbox(
                 "Modelo:",
                 provider_info['models'],
@@ -179,7 +180,7 @@ class ConfigService:
                 return False
             
             elif cancel_clicked:
-                return False
+                return True
         
         return False
     

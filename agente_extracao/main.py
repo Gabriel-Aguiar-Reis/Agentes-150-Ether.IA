@@ -85,52 +85,54 @@ def main():
         )
         
         if upload_option == "📄 Arquivo Único":
+
             uploaded_file = st.file_uploader(
                 "Selecione um arquivo",
                 type=["pdf", "xml", "csv", "xls", "xlsx"],
                 help="Arquivos suportados: PDF, XML, CSV, Excel"
             )
             
-    if uploaded_file:
-        file_path = save_uploaded_file(uploaded_file, "data")
-                
-        # Usa detecção melhorada de tipo
-        file_type = get_supported_file_type(file_path)
-        detected_type = detectar_tipo_arquivo(file_path)
-                
-        if not file_type:
-            st.error(f"❌ Tipo de arquivo não suportado! Detectado: {detected_type}")
-            return
-                
-        # Mostra informações do arquivo
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Arquivo", uploaded_file.name)
-        with col2:
-            st.metric("Tipo Detectado", detected_type)
-        with col3:
-            st.metric("Tamanho", f"{uploaded_file.size / 1024:.1f} KB")
-        
-        if st.button("🚀 Processar Arquivo", type="primary"):
-
-            with st.spinner(f"Processando {uploaded_file.name}..."):
-                 
-                result = process_file(file_path, file_type)
+            if uploaded_file:
+                file_path = save_uploaded_file(uploaded_file, "data")
                         
-                if result["status"] == "success":
-                    st.success(f"✅ {result['file']} processado com sucesso!")
-                    
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        st.metric("Registros", result["records"])
-                    with col2:
-                        st.metric("Tempo", f"{result['processing_time']:.2f}s")
-                    with col3:
-                        st.metric("Status", "✅ Sucesso")
-                else:
-                    st.error(f"❌ Erro ao processar {result['file']}: {result['error']}")
+                # Usa detecção melhorada de tipo
+                file_type = get_supported_file_type(file_path)
+                detected_type = detectar_tipo_arquivo(file_path)
+                        
+                if not file_type:
+                    st.error(f"❌ Tipo de arquivo não suportado! Detectado: {detected_type}")
+                    return
+                        
+                # Mostra informações do arquivo
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Arquivo", uploaded_file.name)
+                with col2:
+                    st.metric("Tipo Detectado", detected_type)
+                with col3:
+                    st.metric("Tamanho", f"{uploaded_file.size / 1024:.1f} KB")
+                
+                if st.button("🚀 Processar Arquivo", type="primary"):
+
+                    with st.spinner(f"Processando {uploaded_file.name}..."):
+                        
+                        result = process_file(file_path, file_type)
+                                
+                        if result["status"] == "success":
+                            st.success(f"✅ {result['file']} processado com sucesso!")
+                            
+                            col1, col2, col3 = st.columns(3)
+                            with col1:
+                                st.metric("Registros", result["records"])
+                            with col2:
+                                st.metric("Tempo", f"{result['processing_time']:.2f}s")
+                            with col3:
+                                st.metric("Status", "✅ Sucesso")
+                        else:
+                            st.error(f"❌ Erro ao processar {result['file']}: {result['error']}")
         
         elif upload_option == "📦 Arquivo ZIP":
+
             uploaded_zip = st.file_uploader(
                 "Selecione um arquivo ZIP",
                 type=["zip"],
