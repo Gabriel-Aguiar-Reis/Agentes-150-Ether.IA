@@ -3,8 +3,6 @@ import shutil
 import zipfile
 import tempfile
 import mimetypes
-from pathlib import Path
-from typing import List, Dict, Tuple
 from services.logging_service import logging_service
 from pypdf import PdfReader
 
@@ -47,7 +45,7 @@ def detectar_tipo_arquivo(file_path):
                 return "PDF_TEXTO"
             else:
                 return "PDF_IMAGEM"
-        except:
+        except Exception:
             return "PDF_IMAGEM"
     elif tipo == "application/vnd.ms-excel" or tipo == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
         return "EXCEL"
