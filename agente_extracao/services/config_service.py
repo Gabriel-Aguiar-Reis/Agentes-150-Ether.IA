@@ -21,7 +21,8 @@ class ConfigService:
             "meta-llama/llama-3.1-405b-instruct",
             "meta-llama/llama-3.1-70b-instruct",
             "mistralai/mistral-7b-instruct",
-            "microsoft/phi-3-medium-128k-instruct"
+            "microsoft/phi-3-medium-128k-instruct",
+            "google/gemma-3-27b-it:free"
         ]
         self.default_model = "openai/gpt-4o-mini"
     
