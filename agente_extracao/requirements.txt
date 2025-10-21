@@ -1,20 +1,19 @@
-# Core application dependencies
+# Minimal requirements for the application to run
 streamlit>=1.28.0
 python-dotenv>=1.0.0
-
-# Data processing
 pandas>=2.0.0
+pypdf>=3.0.0
 openpyxl>=3.1.0
 xlsxwriter>=3.1.0
-pypdf>=3.0.0
 
-# LangChain ecosystem (simplified)
+# LangChain core
 langchain>=0.1.0
 langchain-experimental>=0.0.50
 langchain-community>=0.0.20
 
-# LLM provider (only OpenRouter via OpenAI-compatible API)
+# LLM providers (install only what you need)
 openai>=1.0.0
 
-# Development and testing
+# Optional: for testing
 pytest>=7.0.0
+
