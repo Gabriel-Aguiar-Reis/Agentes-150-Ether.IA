@@ -1,7 +1,7 @@
-.env
-.venv
+.pytest_cache
 __pycache__
-tests/notas_para_teste/
-tests/notas_para_teste.zip
-*coverage*
-.DS_Store
+*.pyc
+.venv
+.env
+*.log
+data
